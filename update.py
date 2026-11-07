@@ -24,6 +24,7 @@ import asyncio
 import csv
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -241,6 +242,8 @@ def load_nodes(max_nodes: int) -> list:
             continue
         try:
             addr, reg = line.split("#", 1)
+            # 清洗 region 字段：去除源文件可能残留的 [latency ms speed] 等后缀
+            reg = re.sub(r'\s*\[[^\]]*\]\s*', '', reg).strip()
             if addr.startswith("["):
                 bracket_end = addr.index("]")
                 ip = addr[1:bracket_end]
@@ -249,7 +252,7 @@ def load_nodes(max_nodes: int) -> list:
             else:
                 ip, port = addr.rsplit(":", 1)
                 port = int(port)
-            node = Node(ip.strip(), port, reg.strip())
+            node = Node(ip.strip(), port, reg)
             key = (node.ip, node.port, node.region)
             if key not in seen:
                 seen.add(key)

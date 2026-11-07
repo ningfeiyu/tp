@@ -46,7 +46,7 @@ speed_path: "/__down"
 output_json: true
 output_csv: true
 # 是否输出 Clash/Surge/dae 兼容格式
-output_profiles: true
+output_profiles: false
 
 # ---------- 上传开关 ----------
 use_r2: false
