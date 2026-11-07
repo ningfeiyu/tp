@@ -121,9 +121,18 @@ fi
 R2_MSG="🚫 已禁用"
 if [ "$USE_R2" == "true" ] && [ "$TASK_STATUS" != "FAILED" ]; then
   echo "[$(date '+%H:%M:%S')] ☁️ 上传至 Cloudflare R2 存储..."
-  R2_MSG="❌ 上传失败"
-  # 此处可集成 AWS CLI 或 rclone 上传逻辑（保持轻量，不引入付费依赖）
-  echo "[INFO] R2 上传逻辑需根据你的工具链（awscli/rclone）自行集成。"
+  if [ -z "${CF_ACCOUNT_ID:-}" ] || [ -z "${CF_ACCESS_KEY:-}" ] || [ -z "${CF_SECRET_KEY:-}" ] || [ -z "${CF_BUCKET_NAME:-}" ]; then
+    echo "❌ R2 凭据缺失（CF_ACCOUNT_ID / CF_ACCESS_KEY / CF_SECRET_KEY / CF_BUCKET_NAME），跳过上传。"
+    R2_MSG="❌ 凭据缺失"
+  elif ! command -v aws >/dev/null 2>&1; then
+    echo "❌ 未安装 AWS CLI，无法上传 R2。请先 pip install awscli"
+    R2_MSG="❌ 缺少 awscli"
+  else
+    R2_ENDPOINT="https://${CF_ACCOUNT_ID}.r2.cloudflarestorage.com"
+    AWS_ACCESS_KEY_ID="$CF_ACCESS_KEY" AWS_SECRET_ACCESS_KEY="$CF_SECRET_KEY" aws s3 cp "best_ips.txt" "s3://${CF_BUCKET_NAME}/best_ips.txt" --endpoint-url "$R2_ENDPOINT" && \
+    AWS_ACCESS_KEY_ID="$CF_ACCESS_KEY" AWS_SECRET_ACCESS_KEY="$CF_SECRET_KEY" aws s3 cp "full_ips.txt" "s3://${CF_BUCKET_NAME}/full_ips.txt" --endpoint-url "$R2_ENDPOINT" && \
+    R2_MSG="✅ 成功 (R2)" || R2_MSG="❌ 上传失败"
+  fi
 elif [ "$USE_R2" == "true" ] && [ "$TASK_STATUS" == "FAILED" ]; then
   R2_MSG="🚫 熔断跳过"
 fi
