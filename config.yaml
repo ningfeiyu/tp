@@ -1,0 +1,89 @@
+# Cloudflare IP 优选脚本集中配置文件
+# 所有阈值、超时、并发数、上传开关均可在此调整。
+# 敏感密钥（Token、Secret、账号）请勿写在此文件，请放入 .env 或 GitHub Secrets。
+
+# ---------- 全局运行模式 ----------
+# cloud: 云端上传（R2/GitHub + 通知）；local: 仅本地测速，不上传
+default_mode: "local"
+
+# ---------- IP 来源 ----------
+# IP 列表下载地址，每行格式：ip:port#region
+input_url: "https://raw.githubusercontent.com/ningfeiyu/cloudflare_ip/main/full_ips.txt"
+download_timeout: 60.0
+
+# ---------- TCP 延迟测试 ----------
+# 并发线程数（建议 100-500，Termux 等低性能设备可调低）
+# Termux 等低性能设备建议降低并发，避免卡顿
+tcp_workers: 100
+# TCP 连接超时（秒），超过此时间视为不通
+tcp_timeout: 1.5
+# 延迟上限（ms），0 表示不限制；超过此值的 IP 直接丢弃
+max_latency_ms: 0
+
+# ---------- 区域筛选 ----------
+# 从 IP 列表最多读取多少个条目（0 表示全量，Termux 低内存设备建议 20000）
+max_nodes: 20000
+# 每个地区保留延迟最低的 IP 数量
+top_per_region: 5
+
+# ---------- 下载速度测试 ----------
+# 并发线程数（Termux 建议 4-8）
+speed_workers: 4
+# 单个下载超时（秒）
+speed_timeout: 6.0
+# 进程级物理死线缓冲（秒），防止 curl 僵死
+speed_process_buffer: 16.0
+# 最低达标速度（Mbps），低于此值不进入 best_ips.txt
+speed_min_mbps: 5.0
+# 测速目标文件大小（字节），2MB
+speed_bytes: 2097152
+# 测速域名与路径
+speed_domain: "speed.cloudflare.com"
+speed_path: "/__down"
+
+# ---------- 输出格式 ----------
+# 是否同时输出 JSON 与 CSV
+output_json: true
+output_csv: true
+# 是否输出 Clash/Surge/dae 兼容格式
+output_profiles: true
+
+# ---------- 上传开关 ----------
+use_r2: false
+use_github: false
+use_telegram: false
+use_email: false
+
+# ---------- GitHub 上传 ----------
+# api: GitHub REST API 上传；push: 传统 git push
+github_sync_mode: "api"
+# 以下字段建议留空，通过 .env 或 GitHub Secrets 注入
+github_owner: ""
+github_repo_name: ""
+github_proxy_domain: ""
+github_use_proxy: false
+
+# ---------- Cloudflare R2 ----------
+r2_bucket_name: ""
+r2_proxy_domain: ""
+
+# ---------- Telegram ----------
+telegram_bot_token: ""
+telegram_chat_id: ""
+telegram_proxy_domain: ""
+telegram_use_proxy: false
+
+# ---------- Email ----------
+mail_host: ""
+mail_user: ""
+mail_pass: ""
+mail_to: ""
+
+# ---------- 本地代理 ----------
+# 测速时强制直连，上传/通知时可走代理
+local_use_proxy: false
+local_proxy_addr: ""
+
+# ---------- 通知 ----------
+# 测速失败是否仍发送通知（true=失败也通知，false=仅成功通知）
+notify_on_failure: true

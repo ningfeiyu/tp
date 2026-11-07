@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 环境变量与敏感配置
+.env
+.env.local
+.env.production
+*.secret
+
+# 输出结果（可选提交，建议由 CI 自动生成）
+best_ips.txt
+full_ips.txt
+ips.json
+ips.csv
+ips.txt
+
+# Shell
+*.sh.swp
+config.yaml.local
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+cron_log.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

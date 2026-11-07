@@ -1,0 +1,40 @@
+proxies:
+  - name: "CF-HK [65.74ms 7.28Mbps]-85.121.245.104"
+    type: ss
+    server: 85.121.245.104
+    port: 443
+    cipher: aes-128-gcm
+    password: ""
+    udp: true
+
+  - name: "CF-HK [67.94ms 0.0Mbps]-96.9.228.241"
+    type: ss
+    server: 96.9.228.241
+    port: 443
+    cipher: aes-128-gcm
+    password: ""
+    udp: true
+
+  - name: "CF-HK [优选高速 70.57ms 20.24Mbps]-85.121.245.35"
+    type: ss
+    server: 85.121.245.35
+    port: 443
+    cipher: aes-128-gcm
+    password: ""
+    udp: true
+
+  - name: "CF-CN [优选高速 73.27ms 10.56Mbps]-8.134.220.58"
+    type: ss
+    server: 8.134.220.58
+    port: 8443
+    cipher: aes-128-gcm
+    password: ""
+    udp: true
+
+  - name: "CF-JP [70.87ms 1.47Mbps]-45.196.233.233"
+    type: ss
+    server: 45.196.233.233
+    port: 8443
+    cipher: aes-128-gcm
+    password: ""
+    udp: true
